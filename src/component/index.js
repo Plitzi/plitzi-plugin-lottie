@@ -1,14 +1,13 @@
 // Relatives
-import Demo from './Demo';
-import DemoChild from './DemoChild';
+import Lottie from './Lottie';
 import Settings from './Settings';
 
-Demo.type = 'demo';
-Demo.pluginSettings = Settings;
-Demo.version = VERSION;
+Lottie.type = 'lottie';
+Lottie.pluginSettings = Settings;
+Lottie.version = VERSION;
 
-export const plugins = { demoChild: DemoChild };
+export const plugins = {  };
 
 export const version = VERSION;
 
-export default Demo;
+export default Lottie;

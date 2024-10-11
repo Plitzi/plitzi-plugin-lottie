@@ -4,15 +4,15 @@ import { render } from '@testing-library/react';
 import { PlitziServiceProvider } from '@plitzi/plitzi-sdk';
 
 // Relatives
-import Demo from './Demo';
+import Lottie from './Lottie';
 
-describe('Demo', () => {
+describe('Lottie', () => {
   it('should render successfully', () => {
     const ref = { current: null };
 
     const BaseElement = render(
       <PlitziServiceProvider value={{ settings: { previewMode: true } }}>
-        <Demo ref={ref} />
+        <Lottie ref={ref} />
       </PlitziServiceProvider>
     );
 

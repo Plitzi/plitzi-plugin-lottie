@@ -4,13 +4,13 @@ import noop from 'lodash/noop';
 import PlitziSdk, { PlitziServiceProvider } from '@plitzi/plitzi-sdk';
 
 // Relatives
-import Demo from './Demo';
+import Lottie from './Lottie';
 import Settings from './Settings';
 
 export default {
-  title: 'Example/Demo',
+  title: 'Example/Lottie',
   decorators: [],
-  component: Demo,
+  component: Lottie,
   argTypes: {}
 };
 
@@ -45,8 +45,8 @@ const schema = {
         content: 'Testing'
       },
       definition: {
-        label: 'Demo',
-        type: 'demo',
+        label: 'Lottie',
+        type: 'lottie',
         description: '',
         parentId: '5f544375ced80ed16f382b7b',
         styleSelectors: {
@@ -61,8 +61,8 @@ const schema = {
 export const WithHoc = () => (
   <PlitziSdk offlineMode offlineData={{ schema }}>
     <PlitziSdk.Plugin
-      renderType="demo"
-      component={Demo}
+      renderType="lottie"
+      component={Lottie}
       assets={[
         {
           type: 'text/css',
@@ -77,8 +77,8 @@ export const WithHoc = () => (
 export const WithHocNoPreview = () => (
   <PlitziSdk offlineMode offlineData={{ schema }} previewMode={false}>
     <PlitziSdk.Plugin
-      renderType="demo"
-      component={Demo}
+      renderType="lottie"
+      component={Lottie}
       assets={[
         {
           type: 'text/css',
@@ -92,7 +92,7 @@ export const WithHocNoPreview = () => (
 
 export const WithHocNoIframe = () => (
   <PlitziSdk offlineMode renderMode="raw" offlineData={{ schema }}>
-    <PlitziSdk.Plugin renderType="demo" component={Demo} />
+    <PlitziSdk.Plugin renderType="lottie" component={Lottie} />
   </PlitziSdk>
 );
 
@@ -105,7 +105,7 @@ export const ComponentRender = () => {
         settings: { previewMode: true }
       }}
     >
-      <Demo ref={ref} />
+      <Lottie ref={ref} />
     </PlitziServiceProvider>
   );
 };
@@ -113,7 +113,7 @@ export const ComponentRender = () => {
 ComponentRender.args = {
   className: '',
   internalProps: {},
-  content: 'Demo Component'
+  content: 'Lottie Component'
 };
 
 export const ComponentSettings = args => {

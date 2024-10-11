@@ -1,9 +1,9 @@
 {
-  "demo": {
+  "lottie": {
     "attributes": {},
     "definition": {
-      "label": "Demo",
-      "type": "demo",
+      "label": "Lottie",
+      "type": "lottie",
       "bindings": {},
       "styleSelectors": {
         "base": ""
@@ -19,49 +19,14 @@
       "itemsNotAllowed": []
     },
     "bindingsAllowed": {
-      "attributes": [{ "path": "content", "label": "Content" }],
+      "attributes": [],
       "initialState": [
         { "path": "visibility", "label": "Visibility" },
         { "path": "styleSelectors.base", "label": "Selector - Base" }
       ]
     },
     "defaultStyle": {
-      "name": "Demo",
-      "displayMode": "desktop",
-      "style": {
-        "base": {}
-      }
-    }
-  },
-  "demoChild": {
-    "attributes": {},
-    "definition": {
-      "label": "Demo Child",
-      "type": "demoChild",
-      "bindings": {},
-      "styleSelectors": {
-        "base": ""
-      }
-    },
-    "builder": {
-      "canDelete": true,
-      "canSelect": true,
-      "canDragDrop": true,
-      "canMove": true,
-      "canTemplate": true,
-      "itemsAllowed": [],
-      "itemsNotAllowed": []
-    },
-    "bindingsAllowed": {
-      "attributes": [{ "path": "content", "label": "Content" }],
-      "style": [],
-      "initialState": [
-        { "path": "visibility", "label": "Visibility" },
-        { "path": "styleSelectors.base", "label": "Selector - Base" }
-      ]
-    },
-    "defaultStyle": {
-      "name": "Demo Child",
+      "name": "Lottie",
       "displayMode": "desktop",
       "style": {
         "base": {}

@@ -14,7 +14,7 @@ const PACKAGE = require('./package.json');
 
 const DESTINATION = path.resolve(__dirname, './dist/');
 
-const PluginName = 'demo';
+const PluginName = 'lottie';
 
 const build = (env, args) => {
   const devMode = args.mode !== 'production';
@@ -35,6 +35,7 @@ const build = (env, args) => {
       publicPath: 'auto'
     },
     watch,
+    externals: ['react', 'react-dom', '@plitzi/plitzi-sdk'],
     devServer: {
       allowedHosts: 'all',
       compress: false,
@@ -117,7 +118,7 @@ const build = (env, args) => {
             module: 'Plugin'
           },
           definition: {
-            name: "Plitzi's Demo Plugin",
+            name: "Plitzi's Lottie Plugin",
             description: '',
             owner: 'Plitzi',
             verified: true,
