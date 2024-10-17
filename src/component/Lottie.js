@@ -18,6 +18,8 @@ const emptyObject = {};
  *   autoplay?: boolean;
  *   loop?: boolean;
  *   clearOnStop?: boolean;
+ *   reversePlayOnStop?: boolean;
+ *   direction: number;
  *   mode?: 'hover' | 'focus' | 'click' | 'custom';
  * }} props
  * @returns {React.ReactElement}
@@ -30,43 +32,68 @@ const Lottie = props => {
     autoplay = true,
     loop = true,
     clearOnStop = false,
+    reversePlayOnStop = false,
+    direction: directionProp = 1,
     mode = 'custom',
     internalProps = emptyObject
   } = props;
   const lottieRef = useRef();
-  const [play, setPlay] = useState(autoplay);
+  const [playState, setPlayState] = useState(autoplay);
+  const [direction, setDirection] = useState(directionProp);
 
   useEffect(() => {
-    setPlay(autoplay);
+    setDirection(directionProp);
+  }, [directionProp]);
+
+  useEffect(() => {
+    setPlayState(autoplay);
   }, [autoplay]);
 
-  const handleMouseEnter = useCallback(() => {
-    if (mode === 'hover') {
-      setPlay(true);
+  const play = useCallback(() => {
+    setPlayState(true);
+    if (reversePlayOnStop) {
+      setDirection(1);
     }
-  }, [mode]);
+  }, [reversePlayOnStop]);
+
+  const stop = useCallback(
+    clearOnStopAux => {
+      if (clearOnStopAux && !reversePlayOnStop) {
+        setPlayState(false);
+        lottieRef.current.stop();
+        setPlayState(reversePlayOnStop);
+      } else if (reversePlayOnStop) {
+        setDirection(-1);
+      }
+    },
+    [reversePlayOnStop]
+  );
+
+  const handleMouseEnter = useCallback(() => {
+    if (mode !== 'hover') {
+      return;
+    }
+
+    play();
+  }, [mode, play]);
 
   const handleMouseLeave = useCallback(() => {
-    if (mode === 'hover') {
-      setPlay(false);
-      if (clearOnStop) {
-        lottieRef.current.stop();
-      }
+    if (mode !== 'hover') {
+      return;
     }
-  }, [mode, clearOnStop]);
+
+    stop(clearOnStop);
+  }, [mode, clearOnStop, stop]);
 
   const handlePlayAnimation = useCallback(() => {
-    setPlay(true);
-  }, []);
+    play();
+  }, [play]);
 
   const handleStopAnimation = useCallback(
     params => {
-      setPlay(false);
-      if (params.clearOnStop) {
-        lottieRef.current.stop();
-      }
+      stop(params.clearOnStop);
     },
-    [lottieRef.current]
+    [lottieRef.current, stop]
   );
 
   const interactionCallbacks = useMemo(() => {
@@ -95,16 +122,30 @@ const Lottie = props => {
     };
   }, [handlePlayAnimation, handleStopAnimation, internalProps?.definition?.label]);
 
+  const handleLoopComplete = useCallback(() => {
+    console.log('called end');
+    setPlayState(false);
+  }, [direction, reversePlayOnStop]);
+
   return (
     <RootElement
       ref={ref}
       internalProps={internalProps}
       className={classNames('plitzi-component__lottie', className)}
       interactionCallbacks={interactionCallbacks}
+      direction={direction}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <ReactLottie ref={lottieRef} className="lottie__container" loop={loop} path={url} play={play} />
+      <ReactLottie
+        ref={lottieRef}
+        className="lottie__container"
+        loop={loop}
+        path={url}
+        play={playState}
+        direction={direction}
+        onLoopComplete={handleLoopComplete}
+      />
     </RootElement>
   );
 };
