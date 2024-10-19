@@ -1,9 +1,12 @@
 // Packages
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ReactLottie from 'react-lottie-player';
+// import ReactLottie from 'react-lottie-player';
 import classNames from 'classnames';
 import get from 'lodash/get';
 import { RootElement } from '@plitzi/plitzi-sdk'; // usePlitziServiceContext
+
+// Relatives
+import ReactLottie from './LottiePlayer';
 
 // Styles
 import './Assets/index.scss';
@@ -37,7 +40,7 @@ const Lottie = props => {
     mode = 'custom',
     internalProps = emptyObject
   } = props;
-  const lottieRef = useRef();
+  const lottieRef = useRef(null);
   const [playState, setPlayState] = useState(autoplay);
   const [direction, setDirection] = useState(directionProp);
 
@@ -139,6 +142,9 @@ const Lottie = props => {
     >
       <ReactLottie
         ref={lottieRef}
+        id={internalProps.id}
+        // renderer="svg"
+        // rendererSettings={{ preserveAspectRatio: 'xMidYMid slice' }}
         className="lottie__container"
         loop={loop}
         path={url}

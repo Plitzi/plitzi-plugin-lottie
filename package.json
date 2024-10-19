@@ -16,9 +16,9 @@
   "dependencies": {
     "@plitzi/plitzi-sdk": "^0.23.1",
     "@plitzi/plitzi-ui": "^0.0.3",
+    "lottie-web": "^5.12.2",
     "react": "19.0.0-rc-2d16326d-20240930",
-    "react-dom": "19.0.0-rc-2d16326d-20240930",
-    "react-lottie-player": "^2.1.0"
+    "react-dom": "19.0.0-rc-2d16326d-20240930"
   },
   "devDependencies": {
     "@babel/compat-data": "^7.25.8",
