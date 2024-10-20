@@ -78,11 +78,10 @@ const LottiePlayer = props => {
       animationDataAux = cloneDeep(animationData);
     }
 
-    const { current } = refInternal;
     animationRef.current = lottieWeb.loadAnimation({
       animationData: animationDataAux,
       path,
-      container: current,
+      container: refInternal.current,
       renderer,
       loop,
       autoplay,

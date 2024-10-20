@@ -18,12 +18,12 @@ const emptyObject = {};
  *   className?: string;
  *   internalProps?: Record<string, unknown>;
  *   url?: string;
- *   autoplay?: boolean;
+ *   autoPlay?: boolean;
  *   loop?: boolean;
  *   clearOnStop?: boolean;
  *   reversePlayOnStop?: boolean;
  *   direction: number;
- *   mode?: 'hover' | 'focus' | 'click' | 'custom';
+ *   mode?: 'hover' | 'focus' | 'click' | 'interaction' | 'custom';
  * }} props
  * @returns {React.ReactElement}
  */
@@ -32,7 +32,7 @@ const Lottie = props => {
     ref,
     className = '',
     url = '',
-    autoplay = true,
+    autoPlay = true,
     loop = true,
     clearOnStop = false,
     reversePlayOnStop = false,
@@ -41,7 +41,7 @@ const Lottie = props => {
     internalProps = emptyObject
   } = props;
   const lottieRef = useRef(null);
-  const [playState, setPlayState] = useState(autoplay);
+  const [playState, setPlayState] = useState(autoPlay);
   const [direction, setDirection] = useState(directionProp);
 
   useEffect(() => {
@@ -49,8 +49,8 @@ const Lottie = props => {
   }, [directionProp]);
 
   useEffect(() => {
-    setPlayState(autoplay);
-  }, [autoplay]);
+    setPlayState(autoPlay);
+  }, [autoPlay]);
 
   const play = useCallback(() => {
     setPlayState(true);
@@ -89,14 +89,22 @@ const Lottie = props => {
   }, [mode, clearOnStop, stop]);
 
   const handlePlayAnimation = useCallback(() => {
+    if (mode !== 'interaction') {
+      return;
+    }
+
     play();
-  }, [play]);
+  }, [play, mode]);
 
   const handleStopAnimation = useCallback(
     params => {
+      if (mode !== 'interaction') {
+        return;
+      }
+
       stop(params.clearOnStop);
     },
-    [lottieRef.current, stop]
+    [stop, mode]
   );
 
   const interactionCallbacks = useMemo(() => {
