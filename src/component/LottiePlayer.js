@@ -65,7 +65,7 @@ const LottiePlayer = props => {
   } = props;
   const refInternal = useRef(ref.current);
   const [ready, setReady] = useState(false);
-  const [animation, setAnimation] = useState();
+  const animationRef = useRef();
 
   useEffect(() => {
     if (id) {
@@ -79,7 +79,7 @@ const LottiePlayer = props => {
     }
 
     const { current } = refInternal;
-    const anim = lottieWeb.loadAnimation({
+    animationRef.current = lottieWeb.loadAnimation({
       animationData: animationDataAux,
       path,
       container: current,
@@ -89,64 +89,61 @@ const LottiePlayer = props => {
       rendererSettings,
       ...(audioFactory ? { audioFactory } : {})
     });
-    setAnimation(anim);
 
     return () => {
       setReady(false);
-      setTimeout(() => {
-        anim.destroy();
-        setAnimation(undefined);
-      }, 0);
+      animationRef.current.destroy();
+      animationRef.current = undefined;
     };
   }, [id, path, renderer, loop, autoplay, rendererSettings, audioFactory]);
 
   useEffect(() => {
-    if (!animation) {
+    if (!animationRef.current) {
       return undefined;
     }
 
-    animation.addEventListener('complete', onComplete);
+    animationRef.current.addEventListener('complete', onComplete);
 
     return () => {
-      animation.removeEventListener('complete', onComplete);
+      animationRef.current?.removeEventListener('complete', onComplete);
     };
-  }, [animation, onComplete]);
+  }, [onComplete]);
 
   useEffect(() => {
-    if (!animation) {
+    if (!animationRef.current) {
       return undefined;
     }
 
-    animation.addEventListener('loopComplete', onLoopComplete);
+    animationRef.current.addEventListener('loopComplete', onLoopComplete);
 
     return () => {
-      animation.removeEventListener('loopComplete', onLoopComplete);
+      animationRef.current?.removeEventListener('loopComplete', onLoopComplete);
     };
-  }, [animation, onLoopComplete]);
+  }, [onLoopComplete]);
 
   useEffect(() => {
-    if (!animation) {
+    if (!animationRef.current) {
       return undefined;
     }
 
-    animation.addEventListener('enterFrame', onEnterFrame);
+    animationRef.current.addEventListener('enterFrame', onEnterFrame);
 
     return () => {
-      animation.removeEventListener('enterFrame', onEnterFrame);
+      animationRef.current?.removeEventListener('enterFrame', onEnterFrame);
     };
-  }, [animation, onEnterFrame]);
+  }, [onEnterFrame]);
 
   useEffect(() => {
-    if (!animation) {
+    if (!animationRef.current) {
       return undefined;
     }
 
-    animation.addEventListener('segmentStart', onSegmentStart);
+    animationRef.current.addEventListener('segmentStart', onSegmentStart);
 
     return () => {
-      animation.removeEventListener('segmentStart', onSegmentStart);
+      animationRef.current?.removeEventListener('segmentStart', onSegmentStart);
     };
-  }, [animation, onSegmentStart]);
+  }, [onSegmentStart]);
 
   const handleLoad = useCallback(
     e => {
@@ -157,40 +154,40 @@ const LottiePlayer = props => {
   );
 
   useEffect(() => {
-    if (!animation) {
+    if (!animationRef.current) {
       return undefined;
     }
 
-    animation.addEventListener('DOMLoaded', handleLoad);
+    animationRef.current?.addEventListener('DOMLoaded', handleLoad);
 
     return () => {
-      animation.removeEventListener('DOMLoaded', handleLoad);
+      animationRef.current?.removeEventListener('DOMLoaded', handleLoad);
     };
-  }, [animation, handleLoad]);
+  }, [handleLoad]);
 
   useEffect(() => {
     if (!ready) {
       return;
     }
 
-    animation.loop = loop;
-  }, [ready, loop, animation]);
+    animationRef.current.loop = loop;
+  }, [ready, loop]);
 
   useEffect(() => {
     if (!ready || Number.isNaN(speed)) {
       return;
     }
 
-    animation.setSpeed(speed);
-  }, [speed, ready, animation]);
+    animationRef.current.setSpeed(speed);
+  }, [speed, ready]);
 
   useEffect(() => {
     if (!ready) {
       return;
     }
 
-    animation.setDirection(direction);
-  }, [direction, animation, ready]);
+    animationRef.current.setDirection(direction);
+  }, [direction, ready]);
 
   useEffect(() => {
     if (!ready || (!goTo && goTo !== 0)) {
@@ -199,21 +196,21 @@ const LottiePlayer = props => {
 
     const isFrame = true; // TODO
     if (play) {
-      animation.goToAndPlay(goTo, isFrame);
+      animationRef.current.goToAndPlay(goTo, isFrame);
     } else {
-      animation.goToAndStop(goTo, isFrame);
+      animationRef.current.goToAndStop(goTo, isFrame);
     }
-  }, [animation, goTo, play, ready]);
+  }, [goTo, play, ready]);
 
   useEffect(() => {
     if (!ready) {
       return;
     }
 
-    if (animation.setSubframe) {
-      animation.setSubframe(useSubframes);
+    if (animationRef.current.setSubframe) {
+      animationRef.current.setSubframe(useSubframes);
     }
-  }, [animation, useSubframes]);
+  }, [useSubframes, ready]);
 
   const wasPlayingSegmentsRef = useRef(false);
   useEffect(() => {
@@ -222,15 +219,15 @@ const LottiePlayer = props => {
     }
 
     function playReverse(lastFrame) {
-      animation.goToAndPlay(lastFrame, true);
-      animation.setDirection(direction);
+      animationRef.current.goToAndPlay(lastFrame, true);
+      animationRef.current.setDirection(direction);
     }
 
     if (play === true) {
       const force = true;
       wasPlayingSegmentsRef.current = !!segments;
       if (segments) {
-        animation.playSegments(segments, force);
+        animationRef.current.playSegments(segments, force);
 
         // This needs to be called after playSegments or it will not play backwards
         if (direction === -1) {
@@ -240,20 +237,20 @@ const LottiePlayer = props => {
         }
       } else {
         if (wasPlayingSegmentsRef.current) {
-          animation.resetSegments(force);
+          animationRef.current.resetSegments(force);
         }
 
         if (direction === -1) {
-          const lastFrame = animation.getDuration(true);
+          const lastFrame = animationRef.current.getDuration(true);
           playReverse(lastFrame);
         } else {
-          animation.play();
+          animationRef.current.play();
         }
       }
     } else if (play === false) {
-      animation.pause();
+      animationRef.current.pause();
     }
-  }, [play, segments, ready, direction, animation]);
+  }, [play, segments, ready, direction]);
 
   const handleRef = useCallback(current => {
     refInternal.current = current;
