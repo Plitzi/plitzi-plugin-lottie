@@ -7,7 +7,7 @@ module.exports = {
     jest: true
   },
   parser: '@babel/eslint-parser',
-  extends: ['airbnb', 'prettier', 'plugin:storybook/recommended'],
+  extends: ['airbnb', 'prettier', 'plugin:storybook/recommended', 'plugin:import/recommended'],
   parserOptions: {
     requireConfigFile: false,
     babelOptions: {
@@ -32,12 +32,12 @@ module.exports = {
   settings: {
     'import/resolver': {
       alias: {
-        map: [['@plitzi/plitzi-ui', path.resolve('./node_modules/@plitzi/plitzi-ui/dist/components')]],
+        map: [['@plitzi/plitzi-ui-components', path.resolve('./node_modules/@plitzi/plitzi-ui-components/dist/components')]],
         extensions: ['.ts', '.js', '.jsx', '.json', '.stores.js']
       }
     }
   },
-  plugins: ['react', 'jsdoc'],
+  plugins: ['react', 'jsdoc', 'import'],
   rules: {
     'jsdoc/require-description': 0,
     'jsdoc/require-param': 1,
