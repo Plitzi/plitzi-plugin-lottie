@@ -29,7 +29,10 @@
       "name": "Lottie",
       "displayMode": "desktop",
       "style": {
-        "base": {}
+        "base": {
+          "min-width": "50px",
+          "min-height": "50px"
+        }
       }
     }
   }

@@ -6,7 +6,7 @@ Lottie.type = 'lottie';
 Lottie.pluginSettings = Settings;
 Lottie.version = VERSION;
 
-export const plugins = {  };
+export const plugins = {};
 
 export const version = VERSION;
 
