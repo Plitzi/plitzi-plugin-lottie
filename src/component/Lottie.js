@@ -134,7 +134,6 @@ const Lottie = props => {
   }, [handlePlayAnimation, handleStopAnimation, internalProps?.definition?.label]);
 
   const handleLoopComplete = useCallback(() => {
-    console.log('called end');
     setPlayState(false);
   }, [direction, reversePlayOnStop]);
 
