@@ -2,7 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const WebpackAssetsManifest = require('webpack-assets-manifest');
+const { WebpackAssetsManifest } = require('webpack-assets-manifest');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
@@ -42,9 +42,7 @@ const build = (env, args) => {
       hot: true,
       liveReload: false,
       historyApiFallback: true,
-      static: {
-        directory: path.join(__dirname, 'dist')
-      },
+      static: { directory: path.join(__dirname, 'dist') },
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
@@ -68,24 +66,19 @@ const build = (env, args) => {
             }
           }
         },
-        {
-          test: /\.(png|jpg|gif|svg|...)$/,
-          loader: 'url-loader',
-          exclude: /(node_modules|bower_components)/
-        },
+        { test: /\.(png|jpg|gif|svg|...)$/, loader: 'url-loader', exclude: /(node_modules|bower_components)/ },
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {}
-            },
+            { loader: MiniCssExtractPlugin.loader, options: {} },
             { loader: 'css-loader', options: {} },
             'postcss-loader',
             {
               loader: 'sass-loader',
               options: {
-                sourceMap: devMode
+                implementation: require('sass-embedded'),
+                sourceMap: devMode,
+                sassOptions: { quietDeps: true }
               }
             }
           ],
@@ -95,9 +88,7 @@ const build = (env, args) => {
     },
     plugins: [
       new PlitziPlugin({ isPlugin: true }),
-      new webpack.DefinePlugin({
-        VERSION: JSON.stringify(PACKAGE.version)
-      }),
+      new webpack.DefinePlugin({ VERSION: JSON.stringify(PACKAGE.version) }),
       new MiniCssExtractPlugin({
         filename: 'plitzi-plugin-[name].css',
         chunkFilename: 'plitzi-plugin-chunk-[name].css'
@@ -134,7 +125,8 @@ const build = (env, args) => {
               [asset.src]: {
                 ...asset,
                 type: asset.src.endsWith('.js') ? 'script' : 'style',
-                srcPath: `/plitzi-plugin-${PluginName}/${asset.src}`
+                srcPath: `/plitzi-plugin-${PluginName}/${asset.src}`,
+                isMain: true
               }
             };
           }, {})
@@ -148,13 +140,9 @@ const build = (env, args) => {
         threshold: 1024,
         minRatio: 0.8
       }),
-      new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 1
-      })
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 })
     ],
-    stats: {
-      colors: true
-    }
+    stats: { colors: true }
   };
 
   if (env.WEBPACK_SERVE) {
@@ -167,22 +155,14 @@ const build = (env, args) => {
     modules.plugins.push(
       new CleanWebpackPlugin(),
       new FileManagerPlugin({
-        events: {
-          onEnd: {
-            archive: [{ source: './dist', destination: `./dist/plitzi-plugin-${PluginName}.zip` }]
-          }
-        }
+        events: { onEnd: { archive: [{ source: './dist', destination: `./dist/plitzi-plugin-${PluginName}.zip` }] } }
       })
     );
     modules.optimization = {
       minimize: true,
       minimizer: [
         new TerserPlugin({
-          terserOptions: {
-            output: {
-              comments: /(webpackIgnore:true|webpackIgnore: true)/
-            }
-          },
+          terserOptions: { output: { comments: /(webpackIgnore:true|webpackIgnore: true)/ } },
           extractComments: false
         })
       ]
