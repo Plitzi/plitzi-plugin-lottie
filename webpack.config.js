@@ -103,7 +103,7 @@ const build = (env, args) => {
       ]
     },
     plugins: [
-      new PlitziPlugin({ isPlugin: true }),
+      asZip ? new PlitziPlugin({ isPlugin: true }) : false,
       new webpack.DefinePlugin({ VERSION: JSON.stringify(PACKAGE.version) }),
       new MiniCssExtractPlugin({
         filename: 'plitzi-plugin-[name].css',
